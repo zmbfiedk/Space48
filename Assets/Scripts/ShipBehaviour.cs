@@ -13,7 +13,7 @@ public class ShipBehaviour : MonoBehaviour
     [SerializeField] private float cooldownTime = 3f;
     [SerializeField] private Image itemImageHolder;
     [SerializeField] private TMP_Text introductionField;
-
+    [SerializeField] private TMP_Text messageField;
 
     private float cooldownCounter = 0f;
     private List<Color> items = new List<Color>();
@@ -29,6 +29,12 @@ public class ShipBehaviour : MonoBehaviour
         introductionField.text = "Welcome to Space 4 8. \n Move your ship with the arrows or WASD. \n Shoot with SPACE. \n Gather pickups and cycle with 'Left CTR'.  \n  Use pickups with 'E'.";
         yield return new WaitForSeconds(5f);
         introductionField.enabled = false;
+    }
+    IEnumerator ShowMessage(string message) {
+        messageField.enabled = true;
+        messageField.text = message;
+        yield return new WaitForSeconds(3f);
+        messageField.enabled = false;
     }
     // Update is called once per frame
     void Update()
@@ -115,21 +121,18 @@ public class ShipBehaviour : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && items.Count > 0 && activeItemIndex != -1) {
 
             if (items[activeItemIndex] == Color.blue) {
-                Debug.Log("increase movespeed");
+                StartCoroutine(ShowMessage(" +  Move Speed"));
                 moveSpeed += 5;
             }
             else if (items[activeItemIndex] == Color.red){
-                Debug.Log("increase fire rate cooldown");        
+                StartCoroutine(ShowMessage(" + Fire Rate"));
                 cooldownTime -= 0.1f;
             }
-            else if(items[activeItemIndex] == new Color(1f,1f,0f,1f)){
-                Debug.Log("increase rotationspeed");
+            else if(items[activeItemIndex] == Color.green){
+                StartCoroutine(ShowMessage(" + Rotation Speed"));
                 rotationSpeed += 10;
-            }
-      
-            items.RemoveAt(activeItemIndex);
-
-            
+            }      
+            items.RemoveAt(activeItemIndex);            
             if (activeItemIndex > 0)
             {
                 activeItemIndex--;
@@ -145,25 +148,32 @@ public class ShipBehaviour : MonoBehaviour
         }
     }
 
-    /*TO DO
-    void GetHit() { 
-
-    }
-    void Boost() { 
+    /*TO DO 
     
+    Optie 1:
+
+    void GetHit(){ 
+        //zorg voor enemies die terugschieten. Als je geraakt wordt gaan er levens af. als je levens op zijn ben je af en herstart de game.
+    }  
+    void HealthBoost(){ 
+        //zorg voor een extra powerup die je een health boost geeft
     }
 
-    void ActivateShield() { 
-    
-    }
-    void DeactivateShield()
-    {
+    Optie 2:
 
+    void ActivateShield(){ 
+        //Zorg voor een energie schild dat aangezet kan worden     
     }
-    void CheckShieldEnergy()
-    {
-
+    void DeactivateShield(){
+        //Zorg dat je het schild uit kunt zetten om energie te sparen
     }
+    void CheckShieldEnergy(){
+        //zorg dat je energie op gaat bij gebruik van het schild
+        //is de energie op dan gaat het schild uit
+    }
+    void RegenerateShield(){
+        //Zorg dat je schild langzaam regenereert
+    } 
 
     */
 
